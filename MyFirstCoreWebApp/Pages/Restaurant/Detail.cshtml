@@ -1,0 +1,20 @@
+﻿@page "{restId:int?}"
+@model MyFirstCoreWebApp.Pages.Restaurant.DetailModel
+@{
+    ViewData["Title"] = "Detail";
+}
+
+@if(TempData["Message"] != null)
+{
+<h2>@Model.Message</h2>
+}
+
+
+<h2>@Model.Rest.Id</h2>
+<h2>@Model.Rest.Name</h2>
+<h2>@Model.Rest.Location</h2>
+<h2>@Model.Rest.Type</h2>
+
+
+
+<a asp-page="./List" class="btn btn-default">Back to All</a>

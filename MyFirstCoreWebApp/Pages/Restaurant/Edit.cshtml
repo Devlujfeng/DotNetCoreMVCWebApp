@@ -1,0 +1,35 @@
+﻿@page "{restId:int?}"
+@model MyFirstCoreWebApp.Pages.Restaurant.EditModel
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+<h2>Edit</h2>
+
+<form method="post">
+
+    <input type="hidden" asp-for="Rest.RowKey" />
+    <input type="hidden" asp-for="Rest.PartitionKey" />
+    <div class="form-group">
+        <label asp-for="Rest.Name"></label>
+        <input asp-for="Rest.Name" class="form-control" />
+        <span class="text-danger" asp-validation-for="Rest.Name"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Rest.PK"></label>
+        <input asp-for="Rest.PK" class="form-control" />
+        <span class="text-danger" asp-validation-for="Rest.PK"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Rest.Location"></label>
+        <input asp-for="Rest.Location" class="form-control" />
+        <span class="text-danger" asp-validation-for="Rest.Location"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Rest.Type"></label>
+        <select class="form-control" asp-for="Rest.Type" asp-items="Model.Cuisines"></select>
+        <span class="text-danger" asp-validation-for="Rest.Type"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Save</button>
+</form>

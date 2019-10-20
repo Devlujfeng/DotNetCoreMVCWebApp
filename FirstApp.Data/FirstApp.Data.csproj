@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Azure.Cosmos.Table" Version="1.0.1" />
+    <PackageReference Include="Microsoft.Azure.Storage.Common" Version="10.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FirstApp.Core\FirstApp.Core.csproj" />
+  </ItemGroup>
+
+</Project>
