@@ -8,7 +8,7 @@ using Microsoft.Azure.Cosmos.Table;
 
 namespace FirstApp.Data
 {
-    public class TableManager
+    public class TableManager : DataAccessFacade
     {
         // private property  
         private CloudTable table;
@@ -39,18 +39,18 @@ namespace FirstApp.Data
             }
         }
 
-        public IEnumerable<RestaurantDS> RetrieveByName()
+        public override IEnumerable<RestaurantDS> RetrieveByName()
         {
             var query = new TableQuery<RestaurantDS>();
             var results = table.ExecuteQuery(query);
             return results;
         }
 
-        public IEnumerable<RestaurantDS> RetrieveAll()
+        public override IEnumerable<RestaurantDS> RetrieveAll()
         {
             //perform query to get the values from azure storage
-            //var query = new TableQuery<RestaurantDS>();
-            //var results = table.ExecuteQuery(query);
+            var query = new TableQuery<RestaurantDS>();
+            var results = table.ExecuteQuery(query);
 
 
 
@@ -60,23 +60,25 @@ namespace FirstApp.Data
 
             //TableOperation tq = TableOperation.Retrieve<RestaurantDS>("aa", "b", new list);
             //TableResult data = TableEnt
-            var columns = new List<string>() { "Name", "Location" };
-            TableOperation retrieve = TableOperation.Retrieve<RestaurantDS>("CN", "6");
-            TableResult tr = table.Execute(retrieve);
-            TableBatchOperation tbo = new TableBatchOperation();
-            
-            return null;
+
+
+            //var columns = new List<string>() { "Name", "Location" };
+            //TableOperation retrieve = TableOperation.Retrieve<RestaurantDS>("CN", "6");
+            //TableResult tr = table.Execute(retrieve);
+            //TableBatchOperation tbo = new TableBatchOperation();
+
+            return results;
         }
 
-        public void CreateOrUpdate(RestaurantDS ds)
+        public override void CreateOrUpdate(RestaurantDS ds)
         {
             List<RestaurantDS> dslist = new List<RestaurantDS>();
             dslist.Add(ds);
-            var operation = TableOperation.InsertOrReplace(dslist);
+            var operation = TableOperation.InsertOrReplace(ds);
             table.Execute(operation);
         }
 
-        public void Delete(RestaurantDS ds)
+        public override void Delete(RestaurantDS ds)
         {
             var operation = TableOperation.Delete(ds);
             table.Execute(operation);

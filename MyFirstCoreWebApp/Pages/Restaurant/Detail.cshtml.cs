@@ -21,8 +21,8 @@ namespace MyFirstCoreWebApp.Pages.Restaurant
           this.Irest = InterfaceRestaurant;
         }
 
-        //public void OnGet(int restId)
-        public IActionResult OnGet(string restId)
+        //public void OnGet(long restId)
+        public IActionResult OnGet(long restId)
         {
             Rest = Irest.GetRestuarantById(restId);
             if(Rest == null)

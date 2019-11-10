@@ -25,10 +25,10 @@ namespace MyFirstCoreWebApp.Pages.Restaurant
             this.Irest = InterfaceRestaurant;
             this.htmlHelper = htmlHelper;
         }
-        public IActionResult OnGet(string restId)
+        public IActionResult OnGet(long restId)
         {
             Cuisines = htmlHelper.GetEnumSelectList<ShopType>();
-            if(restId.Equals("00000"))
+            if(restId == 00000)
             {
                 Rest = new RestaurantDS();
             }
@@ -54,12 +54,15 @@ namespace MyFirstCoreWebApp.Pages.Restaurant
             Rest.PartitionKey = Rest.PK;
             if (Rest.RowKey == null)
             {
-                Rest.RowKey = Irest.GetCounts();
+                string ID = Irest.GetCounts();
+                Rest.RowKey = ID;
                 Irest.Add(Rest);
+                Irest.Commit();
             }
             else if(!Rest.RowKey.Equals(string.Empty))
             {
                 Irest.Update(Rest);
+                Irest.Commit();
             }
             TempData["Message"] = "Item saved!";
             return RedirectToPage("./Detail", new { restId = Rest.Id });
