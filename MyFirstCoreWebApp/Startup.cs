@@ -74,7 +74,7 @@ namespace MyFirstCoreWebApp
             });
 
             services.AddScoped<IRestaurantData, SqlRestaurantData>();
-            //services.AddSingleton<IRestaurantData, InMemoryRestaurantData>();
+            services.AddSingleton<DataAccessFacade, InMemoryRestaurantData>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }

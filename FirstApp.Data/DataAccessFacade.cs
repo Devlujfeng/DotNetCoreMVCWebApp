@@ -5,12 +5,15 @@ using System.Text;
 
 namespace FirstApp.Data
 {
-    public class DataAccessFacade
+    public interface DataAccessFacade
     {
+        IEnumerable<RestaurantDS> GetRestaurantByName(string name);
+        RestaurantDS GetRestuarantById(long restId);
+        RestaurantDS Update(RestaurantDS updatedrds);
+        RestaurantDS Add(RestaurantDS newRest);
 
-        public virtual IEnumerable<RestaurantDS> RetrieveAll() => null;
-        public virtual void CreateOrUpdate(RestaurantDS ds) { }
-        public virtual IEnumerable<RestaurantDS> RetrieveByName() => null;
-        public virtual void Delete(RestaurantDS ds) { }
+        RestaurantDS Delete(int Id);
+        string GetCounts();
+        int Commit();
     }
 }

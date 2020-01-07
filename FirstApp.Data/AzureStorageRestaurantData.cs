@@ -10,12 +10,12 @@ namespace FirstApp.Data
     {
 
         public List<RestaurantDS> rest;
-        readonly DataAccessFacade daf;
+        readonly TableManager tm;
 
 
         public AzureStorageRestaurantData()
         {
-            daf = new TableManager("RestaurantDT");
+            tm = new TableManager("RestaurantDT");
         }
 
 
@@ -23,12 +23,12 @@ namespace FirstApp.Data
         {
             if (name is null)
             {
-                rest = daf.RetrieveAll().ToList();
+                rest = tm.RetrieveAll().ToList();
                 return rest;
             }
             else
             {
-                rest = daf.RetrieveByName().ToList();
+                rest = tm.RetrieveByName().ToList();
                 var restslist = from r in rest
                                 where string.IsNullOrEmpty(name) || r.Name.StartsWith(name, StringComparison.OrdinalIgnoreCase) || r.Name.Contains(name, StringComparison.OrdinalIgnoreCase)
                                 orderby r.Name
@@ -46,7 +46,7 @@ namespace FirstApp.Data
         public RestaurantDS Add(RestaurantDS newRest)
         {
             rest.Add(newRest);
-            daf.CreateOrUpdate(newRest);
+            tm.CreateOrUpdate(newRest);
             return newRest;
         }
 
@@ -59,7 +59,7 @@ namespace FirstApp.Data
                 restSingle.Location = updatedrds.Location;
                 restSingle.Type = updatedrds.Type;
             }
-            daf.CreateOrUpdate(restSingle);
+            tm.CreateOrUpdate(restSingle);
             return restSingle;
         }
         public string GetCounts()
@@ -78,7 +78,7 @@ namespace FirstApp.Data
             var restSingle = GetRestuarantById(Id);
             if (restSingle != null)
             {
-                daf.Delete(restSingle);
+                tm.Delete(restSingle);
             }
             //After delete, should not return anything except for status
             return null;

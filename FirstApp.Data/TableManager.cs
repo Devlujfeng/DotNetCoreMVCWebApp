@@ -8,7 +8,7 @@ using Microsoft.Azure.Cosmos.Table;
 
 namespace FirstApp.Data
 {
-    public class TableManager : DataAccessFacade
+    public class TableManager
     {
         // private property  
         private CloudTable table;
@@ -22,6 +22,7 @@ namespace FirstApp.Data
             }
             try
             {
+                
                 string ConnectionString = "DefaultEndpointsProtocol=https;AccountName=lujfengstorage;AccountKey=FkNOkzPxWCm6wP0XxTNZIgX4TrmMcbotWm5F/0a8jZZs2qAQTaixAi82DVsoJt5+ugfvwgcn5mMHTshsFyQPqQ==;EndpointSuffix=core.windows.net";
                 CloudStorageAccount storageAccount = CloudStorageAccount.Parse(ConnectionString);
                 CloudTableClient tableClient = storageAccount.CreateCloudTableClient();
@@ -39,14 +40,14 @@ namespace FirstApp.Data
             }
         }
 
-        public override IEnumerable<RestaurantDS> RetrieveByName()
+        public IEnumerable<RestaurantDS> RetrieveByName()
         {
             var query = new TableQuery<RestaurantDS>();
             var results = table.ExecuteQuery(query);
             return results;
         }
 
-        public override IEnumerable<RestaurantDS> RetrieveAll()
+        public IEnumerable<RestaurantDS> RetrieveAll()
         {
             //perform query to get the values from azure storage
             var query = new TableQuery<RestaurantDS>();
@@ -70,7 +71,35 @@ namespace FirstApp.Data
             return results;
         }
 
-        public override void CreateOrUpdate(RestaurantDS ds)
+        //Insert multiple sets of user information to Azure table
+        public void InsertOrders(CloudStorageAccount storageAccount)
+        {
+            CloudTableClient tableClient = storageAccount.CreateCloudTableClient();
+            CloudTable table = tableClient.GetTableReference("orders");
+            TableBatchOperation batchOperation = new TableBatchOperation();
+
+            OrderEntity newOrder1 = new OrderEntity("Smith", "20150410")
+            {
+                OrderNumber = "1",
+                OrderDate = Convert.ToDateTime("20150410"),
+                ShippedDate = Convert.ToDateTime("20150411"),
+                Status = "shipped"
+            };
+
+            OrderEntity newOrder2 = new OrderEntity("Jones", "20150413");
+            newOrder2.OrderNumber = "2";
+            newOrder2.OrderDate = Convert.ToDateTime("20150413");
+            newOrder2.ShippedDate = Convert.ToDateTime("19000101");
+            newOrder2.Status = "pending";
+
+            batchOperation.Insert(newOrder1);
+            batchOperation.Insert(newOrder2);
+
+            table.ExecuteBatch(batchOperation);
+        }
+
+
+        public void CreateOrUpdate(RestaurantDS ds)
         {
             List<RestaurantDS> dslist = new List<RestaurantDS>();
             dslist.Add(ds);
@@ -78,7 +107,7 @@ namespace FirstApp.Data
             table.Execute(operation);
         }
 
-        public override void Delete(RestaurantDS ds)
+        public void Delete(RestaurantDS ds)
         {
             var operation = TableOperation.Delete(ds);
             table.Execute(operation);

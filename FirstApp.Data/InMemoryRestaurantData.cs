@@ -6,13 +6,10 @@ using System.Text;
 
 namespace FirstApp.Data
 {
-    class InMemoryRestaurantData : IRestaurantData
+    public class InMemoryRestaurantData : DataAccessFacade, IRestaurantData
     {
 
         public List<RestaurantDS> rest;
-        readonly DataAccessFacade daf;
-
-
         public InMemoryRestaurantData()
         {
             //InMemoryData
@@ -62,7 +59,6 @@ namespace FirstApp.Data
                 restSingle.Location = updatedrds.Location;
                 restSingle.Type = updatedrds.Type;
             }
-            daf.CreateOrUpdate(restSingle);
             return restSingle;
         }
         public string GetCounts()
