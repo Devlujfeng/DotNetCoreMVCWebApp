@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using FirstApp.Data;
 using Microsoft.AspNetCore.Authentication;
@@ -14,6 +16,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OpenApi.Models;
 
 namespace MyFirstCoreWebApp
 {
@@ -37,12 +40,24 @@ namespace MyFirstCoreWebApp
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = $"{Configuration["AppId"]} API", Version = "v1" });
+
+                            // Set the comments path for the Swagger JSON and UI.
+                            var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath);
+            });
+            //other stuff
+
+
             services.AddAuthentication(AzureADDefaults.AuthenticationScheme)
                 .AddAzureAD(options => Configuration.Bind("AzureAd", options));
 
             services.Configure<OpenIdConnectOptions>(AzureADDefaults.OpenIdScheme, options =>
             {
-                options.Authority = options.Authority + "/v2.0/";
+                options.Authority = options.Authority + "/v3.1.3/";
 
                 // Per the code below, this application signs in users in any Work and School
                 // accounts and any Microsoft Personal Accounts.
@@ -61,6 +76,7 @@ namespace MyFirstCoreWebApp
                 // ValidateIssuer, above to 'true', and add the issuers you want to accept to the
                 // options.TokenValidationParameters.ValidIssuers collection
                 options.TokenValidationParameters.ValidateIssuer = false;
+               
             });
 
 
@@ -75,8 +91,8 @@ namespace MyFirstCoreWebApp
 
             services.AddScoped<IRestaurantData, SqlRestaurantData>();
             services.AddSingleton<DataAccessFacade, InMemoryRestaurantData>();
-
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddMvc(option => option.EnableEndpointRouting = false);
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -91,6 +107,15 @@ namespace MyFirstCoreWebApp
                 app.UseExceptionHandler("/Error");
                 app.UseHsts();
             }
+            app.UseSwagger();
+
+
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", $"{Configuration["AppId"]} V1");
+            });
+
+
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();

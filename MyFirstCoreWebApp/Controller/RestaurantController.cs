@@ -22,11 +22,14 @@ namespace MyFirstCoreWebApp.ControllerSpace
             this.dfa = dfa;
         }
 
+
+        [HttpGet()]
         public IActionResult Index()
         {
             return View();
         }
 
+        [HttpGet()]
         public IActionResult ListRes()
         {
             MyRestList = Irest.GetRestaurantByName(searchTerm);
@@ -39,6 +42,8 @@ namespace MyFirstCoreWebApp.ControllerSpace
             MyRestList = Irest.GetRestaurantByName(searchTerm);
             return Ok(MyRestList);
         }
+
+        [HttpGet()]
         public string ReturnString()
         {
             return "String";
@@ -48,6 +53,12 @@ namespace MyFirstCoreWebApp.ControllerSpace
         public ActionResult RestaurantList(string name)
         {
             return Ok(dfa.GetRestaurantByName(name));
+        }
+
+        [HttpPost()]
+        public ActionResult AddNewRest(RestaurantDS RestDTO)
+        {
+            return Ok(RestDTO.Name);
         }
     }
 }

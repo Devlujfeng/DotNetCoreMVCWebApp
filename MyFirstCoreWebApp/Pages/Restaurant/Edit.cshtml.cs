@@ -61,6 +61,7 @@ namespace MyFirstCoreWebApp.Pages.Restaurant
             }
             else if(!Rest.RowKey.Equals(string.Empty))
             {
+                Rest.Id = Convert.ToInt64(RouteData.Values["restId"]);
                 Irest.Update(Rest);
                 Irest.Commit();
             }

@@ -60,8 +60,13 @@ namespace FirstApp.Data
         public RestaurantDS Update(RestaurantDS updatedrds)
         {
             db.Database.ExecuteSqlCommand("SET IDENTITY_INSERT [dbo].[Restaurants] ON");
-            var entity = db.Restaurants.Attach(updatedrds);
+            var entity = db.Restaurants.Update(updatedrds);
             entity.State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+
+            // Child records first, insert as per 
+            
+            // Parent records
+            
             return updatedrds;
         }
     }

@@ -16,5 +16,8 @@ namespace FirstApp.Data
 
         }
         public DbSet<RestaurantDS> Restaurants { get; set; }
+        public DbSet<EntityTest> EntityTest { get; set; }
+        public DbSet<RelationshipTest> RelationshipTest { get; set; }
+
     }
 }
